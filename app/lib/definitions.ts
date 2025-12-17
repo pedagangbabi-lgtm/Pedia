@@ -26,8 +26,6 @@ export type Stock = {
   unit: 'gram' | 'ml' | 'pcs' | 'lembar';
   stock: number;
   min_stock: number;
-  price_per_unit: number;
-  supplier: string;
 };
 
 export type RecipeItem = {

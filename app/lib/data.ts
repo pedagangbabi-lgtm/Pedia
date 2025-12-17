@@ -69,8 +69,9 @@ export async function fetchStocks(query: string = '', status: string = '') {
   noStore();
   try {
     const searchFilter = sql`
-      (name ILIKE ${`%${query}%`} OR supplier ILIKE ${`%${query}%`})
+      (name ILIKE ${`%${query}%`})
     `;
+    // HAPUS: OR supplier ILIKE
 
     let statusFilter = sql``; 
 
@@ -83,7 +84,7 @@ export async function fetchStocks(query: string = '', status: string = '') {
     }
     
     const data = await sql<Stock[]>`
-      SELECT * FROM stocks
+      SELECT id, name, unit, stock, min_stock FROM stocks
       WHERE ${searchFilter} ${statusFilter}
       ORDER BY name ASC
     `;

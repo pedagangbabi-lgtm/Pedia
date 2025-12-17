@@ -216,8 +216,7 @@ const StockSchema = z.object({
   }),
   stock: z.coerce.number().min(0, { message: 'Stok awal tidak boleh minus.' }),
   min_stock: z.coerce.number().min(1, { message: 'Stok minimum harus diisi.' }),
-  price_per_unit: z.coerce.number().min(0, { message: 'Harga tidak valid.' }),
-  supplier: z.string().trim().min(1, { message: 'Supplier wajib diisi.' }),
+ 
 });
 
 export type StockState = {
@@ -226,8 +225,7 @@ export type StockState = {
     unit?: string[];
     stock?: string[];
     min_stock?: string[];
-    price_per_unit?: string[];
-    supplier?: string[];
+    
   };
   message?: string | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -240,8 +238,7 @@ export async function createStock(prevState: StockState, formData: FormData) {
     unit: formData.get('unit'),
     stock: formData.get('stock'),
     min_stock: formData.get('min_stock'),
-    price_per_unit: formData.get('price_per_unit'),
-    supplier: formData.get('supplier'),
+    // HAPUS: price_per_unit & supplier
   };
 
   const validated = StockSchema.safeParse(rawData);
@@ -254,22 +251,21 @@ export async function createStock(prevState: StockState, formData: FormData) {
     };
   }
 
-  const { name, unit, stock, min_stock, price_per_unit, supplier } = validated.data;
+  const { name, unit, stock, min_stock } = validated.data;
 
   try {
     await sql`
-      INSERT INTO stocks (name, unit, stock, min_stock, price_per_unit, supplier)
-      VALUES (${name}, ${unit}, ${stock}, ${min_stock}, ${price_per_unit}, ${supplier})
+      INSERT INTO stocks (name, unit, stock, min_stock)
+      VALUES (${name}, ${unit}, ${stock}, ${min_stock})
     `;
   } catch (error) {
-    console.error('Database Error:', error); // Log error
+    console.error('Database Error:', error);
     return { message: 'Database Error: Gagal membuat stok.', values: rawData };
   }
 
   revalidatePath('/dashboard/stok');
   redirect('/dashboard/stok');
 }
-
 export async function updateStock(
   id: string,
   prevState: StockState,
@@ -280,8 +276,7 @@ export async function updateStock(
     unit: formData.get('unit'),
     stock: formData.get('stock'),
     min_stock: formData.get('min_stock'),
-    price_per_unit: formData.get('price_per_unit'),
-    supplier: formData.get('supplier'),
+    // HAPUS: price_per_unit & supplier
   };
 
   const validated = StockSchema.safeParse(rawData);
@@ -294,7 +289,7 @@ export async function updateStock(
     };
   }
 
-  const { name, unit, stock, min_stock, price_per_unit, supplier } = validated.data;
+  const { name, unit, stock, min_stock } = validated.data;
 
   try {
     await sql`
@@ -303,13 +298,11 @@ export async function updateStock(
         name = ${name}, 
         unit = ${unit}, 
         stock = ${stock}, 
-        min_stock = ${min_stock}, 
-        price_per_unit = ${price_per_unit}, 
-        supplier = ${supplier}
+        min_stock = ${min_stock}
       WHERE id = ${id}
     `;
   } catch (error) {
-    console.error('Database Error:', error); // Log error
+    console.error('Database Error:', error);
     return {
       message: 'Database Error: Gagal mengupdate stok.',
       values: rawData

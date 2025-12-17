@@ -2,37 +2,35 @@
 
 import { useState } from 'react';
 import { Stock } from '@/app/lib/definitions';
-import { formatCurrency, getStockStatus, formatNumber } from '@/app/lib/utils';
+import { formatNumber } from '@/app/lib/utils';
 import StockStatusBadge from './status';
 import { Pencil, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 import { deleteStock } from '@/app/lib/actions';
 import Link from 'next/link';
+import { getStockStatus } from '@/app/lib/utils';
 
 export default function StocksTable({ stocks }: { stocks: Stock[] }) {
-    // State untuk mengontrol Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Fungsi saat tombol tong sampah diklik
     const handleDeleteClick = (id: string) => {
         setSelectedId(id);
         setIsModalOpen(true);
     };
 
-    // Fungsi saat tombol "Ya, Hapus" di modal diklik
     const handleConfirmDelete = async () => {
         if (!selectedId) return;
 
-        setIsDeleting(true); // Tampilkan loading spinner
+        setIsDeleting(true);
         try {
             await deleteStock(selectedId);
-            setIsModalOpen(false); // Tutup modal jika sukses
+            setIsModalOpen(false);
         } catch (error) {
             console.error('Gagal menghapus', error);
             alert('Gagal menghapus data');
         } finally {
-            setIsDeleting(false); // Matikan loading
+            setIsDeleting(false);
             setSelectedId(null);
         }
     };
@@ -47,8 +45,6 @@ export default function StocksTable({ stocks }: { stocks: Stock[] }) {
                             <th className="px-3 py-5 font-medium">Nama Bahan</th>
                             <th className="px-3 py-5 font-medium">Stok Tersedia</th>
                             <th className="px-3 py-5 font-medium">Stok Minimum</th>
-                            <th className="px-3 py-5 font-medium">Harga/Satuan</th>
-                            <th className="px-3 py-5 font-medium">Supplier</th>
                             <th className="px-3 py-5 font-medium">Status</th>
                             <th className="py-3 pl-6 pr-3">Aksi</th>
                         </tr>
@@ -66,8 +62,6 @@ export default function StocksTable({ stocks }: { stocks: Stock[] }) {
                                     <td className="px-3 py-3 text-gray-500">
                                         {formatNumber(item.min_stock)} {item.unit}
                                     </td>
-                                    <td className="px-3 py-3">{formatCurrency(item.price_per_unit)}</td>
-                                    <td className="px-3 py-3">{item.supplier}</td>
                                     <td className="px-3 py-3"><StockStatusBadge status={status} /></td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex gap-3">
@@ -93,12 +87,10 @@ export default function StocksTable({ stocks }: { stocks: Stock[] }) {
                 </table>
             </div>
 
-            {/* --- MODAL KONFIRMASI HAPUS --- */}
+            {/* MODAL KONFIRMASI HAPUS */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 fade-in transition-opacity">
                     <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl transform scale-100 transition-transform">
-
-                        {/* Icon Peringatan */}
                         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
                             <AlertTriangle className="h-6 w-6 text-red-600" />
                         </div>
