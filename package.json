@@ -1,0 +1,47 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --turbopack",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tanstack/react-query": "^5.90.12",
+    "bcrypt": "^5.1.1",
+    "clsx": "^2.1.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.4",
+    "lucide-react": "^0.554.0",
+    "next": "^16.0.8",
+    "next-auth": "5.0.0-beta.30",
+    "postgres": "^3.4.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "recharts": "^3.4.1",
+    "typescript": "5.7.3",
+    "use-debounce": "^10.0.4",
+    "use-sync-external-store": "^1.6.0",
+    "zod": "^3.25.17"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/use-sync-external-store": "^1.5.0",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.0.3",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "sharp"
+    ]
+  }
+}
