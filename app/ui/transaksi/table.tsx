@@ -1,3 +1,4 @@
+// app/ui/transaksi/table.tsx
 'use client';
 
 import { Transaction } from '@/app/lib/definitions';
@@ -120,11 +121,12 @@ export default function TransactionTable({
         </table>
       </div>
 
-      {/* RENDER MODAL */}
+      {/* RENDER MODAL dengan customer_phone */}
       {selectedTx && (
         <ReceiptModal 
           transaction={selectedTx} 
-          onClose={() => setSelectedTx(null)} 
+          onClose={() => setSelectedTx(null)}
+          customerPhone={selectedTx.customer_phone}  
         />
       )}
     </>

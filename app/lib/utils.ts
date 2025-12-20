@@ -54,6 +54,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
+
 export const getCustomerStatus = (frequency: number): CustomerStatus => {
   if (frequency >= 25) return 'hot';
   if (frequency >= 15) return 'warm';
@@ -80,16 +81,23 @@ export const formatNumber = (num: number) => {
 };
 
 // ⭐ FORMAT NOMOR UNTUK WHATSAPP
-export const formatPhoneForWA = (phone: string) => {
-  if (!phone) return "";
+// app/lib/utils.ts
 
-  // ambil angka saja
-  let cleaned = phone.replace(/\D/g, "");
-
-  // jika awalan 0 → ubah ke 62
-  if (cleaned.startsWith("0")) {
-    cleaned = "62" + cleaned.substring(1);
+export function formatPhoneForWA(phone: string): string {
+  if (!phone) return '';
+  
+  // Remove all non-numeric characters
+  let cleaned = phone.replace(/\D/g, '');
+  
+  // Jika dimulai dengan 0, ganti dengan 62
+  if (cleaned.startsWith('0')) {
+    cleaned = '62' + cleaned.substring(1);
   }
-
+  
+  // Jika belum ada kode negara, tambahkan 62
+  if (!cleaned.startsWith('62')) {
+    cleaned = '62' + cleaned;
+  }
+  
   return cleaned;
-};
+}

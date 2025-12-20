@@ -296,15 +296,23 @@ export async function fetchTransactions(query: string = '') {
 
 // Update di data.ts (atau tempat Anda menyimpan fungsi fetch)
 
+// app/lib/data.ts
+
 export async function fetchTransactionById(id: string): Promise<Transaction> {
+  if (!id || typeof id !== 'string') {
+    throw new Error('ID transaksi tidak valid');
+  }
+
   const result = await sql`
     SELECT 
       t.id,
-       t.customer_id,  
+      t.customer_id,
       t.total_amount,
+      t.discount_percentage,
+      t.discount_amount,
       t.created_at as date,
       COALESCE(c.name, 'Guest') as customer_name,
-      t.customer_id
+      c.phone as customer_phone  -- ✅ TAMBAHKAN INI
     FROM transactions t
     LEFT JOIN customers c ON t.customer_id = c.id
     WHERE t.id = ${id}
@@ -330,7 +338,10 @@ export async function fetchTransactionById(id: string): Promise<Transaction> {
     id: result[0].id,
     customer_id: result[0].customer_id,
     customer_name: result[0].customer_name,
+    customer_phone: result[0].customer_phone || '',  // ✅ TAMBAHKAN INI
     total_amount: result[0].total_amount,
+    discount_percentage: result[0].discount_percentage || 0,
+    discount_amount: result[0].discount_amount || 0,
     date: result[0].date,
     items: items.map((item) => ({
       menu_id: item.menu_id,

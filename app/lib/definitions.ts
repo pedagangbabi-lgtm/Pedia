@@ -56,7 +56,8 @@ export type TransactionItem = {
 export type Transaction = {
   id: string;
   customer_name: string; 
-  customer_id?: string; 
+  customer_id?: string;
+  customer_phone?: string; 
   total_amount: number;
   discount_percentage?: number;  // 0 atau 5 (persentase)
   discount_amount?: number;
