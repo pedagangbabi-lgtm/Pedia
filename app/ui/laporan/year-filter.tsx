@@ -8,36 +8,51 @@ export default function YearFilter() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  // Ambil tahun dari URL, atau default ke tahun sekarang
-  const currentYear = searchParams.get('year') || new Date().getFullYear().toString();
+  const nowYear = new Date().getFullYear().toString();
+  const currentYear = searchParams.get('year') ?? nowYear;
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const params = new URLSearchParams(searchParams);
-    
-    // Set parameter 'year' di URL
-    params.set('year', event.target.value);
+  const startYear = 2023;
+  const years = Array.from(
+    { length: Number(nowYear) - startYear + 1 },
+    (_, i) => Number(nowYear) - i
+  );
 
-    // Update URL tanpa reload full page
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('year', e.target.value);
     replace(`${pathname}?${params.toString()}`);
   };
 
   return (
-    <div className="relative">
-      {/* Icon Kalender (Kiri) */}
-      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 z-10" />
-      
-      <select 
-        value={currentYear}
-        onChange={handleYearChange}
-        className="appearance-none w-full pl-10 pr-10 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:outline-pink-500 cursor-pointer hover:border-pink-300 transition-colors"
+    <div className="relative inline-flex items-center">
+      {/* VISUAL BOX */}
+      <div
+        className="
+          flex items-center gap-2
+          rounded-lg
+          border border-gray-300
+          bg-white
+          px-3 py-2
+          text-sm font-medium text-gray-900
+        "
       >
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-      </select>
+        <Calendar size={16} className="text-gray-500" />
+        <span className="min-w-[40px] text-center">{currentYear}</span>
+        <ChevronDown size={14} className="text-gray-500" />
+      </div>
 
-      {/* Icon Panah Custom (Kanan) */}
-      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+      {/* SELECT ASLI (INVISIBLE) */}
+      <select
+        value={currentYear}
+        onChange={handleChange}
+        className="absolute inset-0 cursor-pointer opacity-0"
+      >
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
