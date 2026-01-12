@@ -447,11 +447,13 @@ export async function getTransactionDetail(id: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createTransaction(prevState: any, formData: FormData) {
   const rawData = {
     customerId: formData.get('customerId') as string,
     items: formData.get('items') as string,
     totalAmount: Number(formData.get('totalAmount')),
+    ongkir: Number(formData.get('ongkir') || 0), // TAMBAHKAN INI
     discountPercentage: Number(formData.get('discountPercentage') || 0),
     discountAmount: Number(formData.get('discountAmount') || 0),
   };
@@ -505,12 +507,13 @@ export async function createTransaction(prevState: any, formData: FormData) {
 
       const custId = rawData.customerId && rawData.customerId !== "" ? rawData.customerId : null;
 
-      // INSERT dengan data diskon
+      // INSERT dengan data ongkir dan diskon
       await sql`
         INSERT INTO transactions (
           id, 
           customer_id, 
-          total_amount, 
+          total_amount,
+          ongkir,
           discount_percentage,
           discount_amount,
           created_at
@@ -519,6 +522,7 @@ export async function createTransaction(prevState: any, formData: FormData) {
           ${trxId}, 
           ${custId}, 
           ${rawData.totalAmount},
+          ${rawData.ongkir},
           ${rawData.discountPercentage},
           ${rawData.discountAmount},
           NOW()
@@ -598,6 +602,7 @@ export async function updateTransaction(
     customerId: formData.get('customerId') as string || null,
     items: formData.get('items') as string,
     totalAmount: formData.get('totalAmount'),
+    ongkir: Number(formData.get('ongkir') || 0), // TAMBAHKAN INI
     discountPercentage: Number(formData.get('discountPercentage') || 0),
     discountAmount: Number(formData.get('discountAmount') || 0),
   };
@@ -695,7 +700,7 @@ export async function updateTransaction(
         }
       }
 
-      // 5. Update transaksi utama DENGAN DATA DISKON
+      // 5. Update transaksi utama DENGAN DATA ONGKIR DAN DISKON
       const newCustomerId = customerId && customerId !== "" ? customerId : null;
       
       await sql`
@@ -703,6 +708,7 @@ export async function updateTransaction(
         SET 
           customer_id = ${newCustomerId}, 
           total_amount = ${totalAmount},
+          ongkir = ${rawData.ongkir},
           discount_percentage = ${rawData.discountPercentage},
           discount_amount = ${rawData.discountAmount}
         WHERE id = ${id}
