@@ -31,10 +31,7 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-      Jalankan middleware di SEMUA route
-      kecuali file statis
-    */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    
+    "/((?!_next|favicon.ico|.*\\..*).*)",
   ],
 };

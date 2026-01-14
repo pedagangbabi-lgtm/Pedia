@@ -1,7 +1,7 @@
 // generate-hash.js
 const bcrypt = require('bcrypt');
 
-const password = 'babiguling'; // Ganti dengan password yang Anda mau
+const password = 'kopikami'; // Ganti dengan password yang Anda mau
 const saltRounds = 10;
 
 bcrypt.hash(password, saltRounds, (err, hash) => {
